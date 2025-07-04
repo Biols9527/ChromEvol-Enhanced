@@ -4,7 +4,7 @@
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Documentation](https://img.shields.io/badge/docs-latest-brightgreen.svg)](docs/)
 
-> **一个受ChromEvol方法启发的、用于染色体进化分析的先进生物信息学流程**
+> **一个受ChromEvol方法启发的、用于染色体进化分析流程**
 
 ## 🎯 项目概述 (Overview)
 
