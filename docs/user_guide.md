@@ -4,19 +4,6 @@
 
 本用户手册将指导您完成染色体进化分析的全部流程，从数据准备到结果解释。
 
-## 📋 系统要求
-
-### 最低要求
-- **操作系统**: macOS, Linux, Windows 10+
-- **Python版本**: 3.7 或更高版本
-- **内存**: 4GB RAM (推荐 8GB+)
-- **存储空间**: 500MB 可用空间
-
-### 推荐配置
-- **CPU**: 多核处理器 (4核心+)
-- **内存**: 16GB RAM
-- **Python**: 3.9+ (最佳兼容性)
-
 ## 🛠️ 安装指南
 
 ### 步骤1: 下载项目
@@ -27,17 +14,17 @@ cd ChromEvol-Enhanced
 
 ### 步骤2: 安装依赖
 ```bash
-# 使用pip安装
+# 使用conda (推荐)
+conda env create -n ChromEvol python==3.11 libgl
+conda activate ChromEvol
 pip install -r requirements.txt
-
-# 或使用conda (推荐)
-conda env create -f environment.yml
-conda activate chromevol-analysis
 ```
 
 ### 步骤3: 验证安装
 ```bash
-python src/ancestral_reconstruction.py --help
+export export QT_QPA_PLATFORM=offscreen
+or
+QT_QPA_PLATFORM=offscreen python src/ancestral_reconstruction.py --help
 ```
 
 ## 📁 数据准备
@@ -61,8 +48,9 @@ Species_D,18
 
 #### 3. 共线性数据文件 (TSV格式) - 可选
 ```tsv
-species1	chr1	start1	end1	species2	chr2	start2	end2
-Species_A	1	1000	2000	Species_B	1	1500	2500
+species_A	chromosome_A	species_B	chromosome_B	mapping_type_A_to_B	mapping_type_B_to_A	bidirectional_mapping_type	count
+Amphiura_filiformis	chr5	Ophiocomina_nigra	OZ221938.1	1:1	1:1	1:1	932
+Amphiura_filiformis	chr3	Ophiocomina_nigra	OZ221941.1	1:2	1:1	1:n (Fission)	679
 ```
 
 ### 数据质量检查
