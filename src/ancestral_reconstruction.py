@@ -1,6 +1,6 @@
 import pandas as pd
 from ete3 import Tree
-from ete3.treeview import TreeStyle, NodeStyle, TextFace
+# from ete3.treeview import TreeStyle, NodeStyle, TextFace # Moved into plot_annotated_tree
 import argparse
 import os
 import numpy as np
@@ -818,6 +818,13 @@ def plot_annotated_tree(tree, output_file, layout, show_branch_length, show_supp
     """
     logging.info("\n--- Generating Annotated Phylogenetic Tree Image ---")
     try:
+        from ete3.treeview import TreeStyle, NodeStyle, TextFace # Import here
+    except ImportError as e:
+        logging.warning(f"Failed to import ete3.treeview components, likely due to missing GUI dependencies: {e}")
+        logging.warning("Skipping tree image generation. Other analysis results should still be available.")
+        return # Skip plotting
+
+    try:
         ts = TreeStyle()
         ts.mode = "c" if layout == "circular" else "r"
         ts.show_leaf_name = True
@@ -909,9 +916,13 @@ def plot_annotated_tree(tree, output_file, layout, show_branch_length, show_supp
         tree.render(output_file, **render_args)
         logging.info(f"* High-quality annotated tree saved to {output_file}")
 
-    except Exception as e:
-        logging.error(f"Could not generate the graphical tree. Details: {e}", exc_info=True)
-        logging.info("  - Analysis data might still be available in CSV files.")
+    except ImportError: # Already caught above, but good to have a specific catch if other imports were here
+        # This block might be redundant if the first try-except for imports handles all relevant ImportErrors
+        logging.warning("Skipping tree image generation due to import error (already logged).")
+    except Exception as e: # Catch other errors during tree rendering (e.g., display errors, font issues)
+        logging.warning(f"Could not generate the graphical tree, possibly due to missing display or rendering libraries. Details: {e}")
+        # logging.debug("Detailed error for tree generation:", exc_info=True) # Optional: more detail for debugging
+        logging.info("  - Skipping tree image generation. Other analysis results should still be available.")
 
 
 def analyze_rearrangements(species_a, species_b, mapping_df):
