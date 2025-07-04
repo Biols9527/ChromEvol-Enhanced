@@ -21,8 +21,8 @@
 
 ### 步骤1: 下载项目
 ```bash
-git clone https://github.com/your-username/chromevol-enhanced-analysis.git
-cd chromevol-enhanced-analysis
+git clone https://github.com/Biols9527/ChromEvol-Enhanced.git
+cd ChromEvol-Enhanced
 ```
 
 ### 步骤2: 安装依赖
