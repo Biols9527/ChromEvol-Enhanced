@@ -127,16 +127,6 @@ chromevol-enhanced-analysis/
 - 蒙特卡洛模拟
 - 分支特异性统计
 
-## 🤝 贡献代码 (Contributing)
-
-我们欢迎各种贡献！请查看我们的 [贡献指南](CONTRIBUTING.md) (英文) 获取详细信息。
-
-1. Fork 本仓库
-2. 创建您的特性分支 (`git checkout -b feature/amazing-feature`)
-3. 提交您的更改 (`git commit -m 'Add amazing feature'`)
-4. 推送到分支 (`git push origin feature/amazing-feature`)
-5. 开启一个 Pull Request
-
 ## 📄 许可证 (License)
 
 本项目采用MIT许可证授权 - 详情请见 [LICENSE](LICENSE) 文件。
