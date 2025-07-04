@@ -1,0 +1,18 @@
+branch,type,change,from_count,to_count
+Branch from Ambulacraria to Schizocardium_californicum,fission,2,21,23
+Branch from Echinodermata to Eleutherozoa,fission,2,20,22
+Branch from Ophiuroidea1 to Ophiurida,fission,2,23,25
+Branch from Asterozoa to Echinozoa,fission,1,22,23
+Branch from Asterozoa to Ophiuroidea2,fission,1,22,23
+Branch from Euechinoidea to Arbacia_lixula,fission,1,21,22
+Branch from Echinodermata to Crinoidea,fusion,9,20,11
+Branch from Deuterostomia to Pecten_maximus,fusion,5,24,19
+Branch from Deuterostomia to Branchiostoma_floridae,fusion,5,24,19
+Branch from Ophiurida to Amphiura_filiformis,fusion,5,25,20
+Branch from Ophiuroidea2 to Ophiura_sarsii,fusion,4,23,19
+Branch from Deuterostomia to Ambulacraria,fusion,3,24,21
+Branch from Ambulacraria to Echinodermata,fusion,1,21,20
+Branch from Echinozoa to Echinoidea,fusion,1,23,22
+Branch from Echinoidea to Euechinoidea,fusion,1,22,21
+Branch from Camarodonta1 to Toxopneustidae,fusion,1,21,20
+Branch from Toxopneustidae to Lytechinus,fusion,1,20,19
