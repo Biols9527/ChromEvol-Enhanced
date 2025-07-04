@@ -123,14 +123,6 @@ The pipeline generates publication-ready visualizations with:
 - Monte Carlo simulation
 - Branch-specific statistics
 
-## 🔬 Scientific Applications
-
-This pipeline has been successfully applied to:
-- Deuterostome chromosome evolution analysis
-- Phylogenetic comparative genomics
-- Karyotype evolution studies
-- Genome organization research
-
 ## 🤝 Contributing
 
 We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
@@ -145,29 +137,9 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 📞 Contact & Support
-
-- **Issues**: [GitHub Issues](https://github.com/your-username/chromevol-enhanced-analysis/issues)
-- **Documentation**: [Project Wiki](https://github.com/your-username/chromevol-enhanced-analysis/wiki)
-- **Email**: your.email@institution.edu
-
-## 🏆 Citation
-
-If you use this software in your research, please cite:
-
-```bibtex
-@software{chromevol_enhanced_2024,
-  title={ChromEvol-Enhanced Chromosome Evolution Analysis},
-  author={Your Name},
-  year={2024},
-  url={https://github.com/your-username/chromevol-enhanced-analysis},
-  version={1.0.0}
-}
-```
-
 ## 🙏 Acknowledgments
 
-- ChromEvol developers for methodological inspiration
+- [ChromEvol](https://github.com/anatshafir1/chromevol) developers for methodological inspiration 
 - ETE3 team for phylogenetic tree tools
 - Scientific Python community for foundational libraries
 
