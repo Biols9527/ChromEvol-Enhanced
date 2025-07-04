@@ -31,7 +31,7 @@
 conda env create -n ChromEvol python==3.11 libgl
 conda activate ChromEvol
 pip install -r requirements.txt
-
+export export QT_QPA_PLATFORM=offscreen
 ```
 
 ### 1.2 检查工作目录和数据 (Verify Working Directory and Data)
@@ -73,7 +73,9 @@ awk -F',' 'NR > 1 {print $2}' data/chromosome_counts.csv | sort -n | uniq -c
 ### 2.1 运行基础简约法分析
 我们的脚本 `ancestral_reconstruction.py` 在不指定 `--use_chromevol` 时，会采用简约法（或一种简约法思想的实现）进行重建。
 ```bash
-python src/ancestral_reconstruction.py \
+export export QT_QPA_PLATFORM=offscreen
+or 
+QT_QPA_PLATFORM=offscreen python src/ancestral_reconstruction.py \
     --tree data/pruned_phylogeny.nwk \
     --counts data/chromosome_counts.csv \
     --out_image results/tutorial_parsimony.svg \
@@ -110,7 +112,9 @@ head -n 10 results/tutorial_parsimony_events.csv
 ### 3.1 运行基本的ChromEvol ML分析 (不优化参数)
 使用模型默认参数进行分析。
 ```bash
-python src/ancestral_reconstruction.py \
+export export QT_QPA_PLATFORM=offscreen
+or 
+QT_QPA_PLATFORM=offscreen python src/ancestral_reconstruction.py \
     --tree data/pruned_phylogeny.nwk \
     --counts data/chromosome_counts.csv \
     --use_chromevol \
@@ -126,7 +130,9 @@ python src/ancestral_reconstruction.py \
 ### 3.2 启用参数优化 (Optimize Parameters)
 允许脚本优化模型的速率参数（如 gain, loss, duplication 等速率）以更好地拟合数据。
 ```bash
-python src/ancestral_reconstruction.py \
+export export QT_QPA_PLATFORM=offscreen
+or 
+QT_QPA_PLATFORM=offscreen python src/ancestral_reconstruction.py \
     --tree data/pruned_phylogeny.nwk \
     --counts data/chromosome_counts.csv \
     --use_chromevol \
@@ -143,7 +149,9 @@ python src/ancestral_reconstruction.py \
 ### 3.3 进行模型选择 (Model Selection)
 比较不同复杂度的模型（例如，只包含gain/loss的模型 vs 包含所有事件类型的完整模型），并根据AIC/BIC信息准则选择最优模型。
 ```bash
-python src/ancestral_reconstruction.py \
+export export QT_QPA_PLATFORM=offscreen
+or 
+QT_QPA_PLATFORM=offscreen python src/ancestral_reconstruction.py \
     --tree data/pruned_phylogeny.nwk \
     --counts data/chromosome_counts.csv \
     --use_chromevol \
@@ -212,7 +220,9 @@ python scripts/generate_summary.py \
 尝试不同的可视化参数组合：
 ```bash
 # 矩形布局，显示分支长度和支持率
-python src/ancestral_reconstruction.py \
+export export QT_QPA_PLATFORM=offscreen
+or 
+QT_QPA_PLATFORM=offscreen python src/ancestral_reconstruction.py \
     --tree data/pruned_phylogeny.nwk \
     --counts data/chromosome_counts.csv \
     --use_chromevol --optimize_params \
@@ -226,7 +236,9 @@ python src/ancestral_reconstruction.py \
 ### 5.2 特定物种对之间的重排分析 (Synteny-based Rearrangement Analysis)
 如果提供了 `--map` 文件 (如 `data/all.map.tsv`)，可以分析指定物种对之间的染色体结构变异。
 ```bash
-python src/ancestral_reconstruction.py \
+export export QT_QPA_PLATFORM=offscreen
+or 
+QT_QPA_PLATFORM=offscreen python src/ancestral_reconstruction.py \
     --tree data/pruned_phylogeny.nwk \
     --counts data/chromosome_counts.csv \
     --map data/all.map.tsv \
@@ -241,7 +253,9 @@ python src/ancestral_reconstruction.py \
 ### 5.3 生成高分辨率图像用于出版
 使用 `--dpi` 参数（主要对PNG格式有效）。对于SVG或PDF这类矢量格式，它们本身是无损缩放的。
 ```bash
-python src/ancestral_reconstruction.py \
+export export QT_QPA_PLATFORM=offscreen
+or 
+QT_QPA_PLATFORM=offscreen python src/ancestral_reconstruction.py \
     --tree data/pruned_phylogeny.nwk \
     --counts data/chromosome_counts.csv \
     --use_chromevol --optimize_params --model_selection \
