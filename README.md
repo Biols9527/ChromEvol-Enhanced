@@ -6,21 +6,18 @@
 
 > **一个受ChromEvol方法启发的、用于染色体进化分析流程**
 
-## 🎯 项目概述 (Overview)
+## 项目概述 (Overview)
 
 本项目提供了一个全面的工具包，用于分析系统发育树中的染色体进化，主要功能包括最大似然法祖先状态重建、染色体重排分析以及生成出版质量的可视化结果。该流程集成了源于ChromEvol的复杂方法与现代Python科学计算技术。
 
-## ✨ 主要特性 (Key Features)
+## 主要特性 (Key Features)
 
-- 🔬 **受ChromEvol启发的最大似然建模**
-- 📊 **祖先染色体状态重建**
-- 🧬 **染色体重排量化** (融合、分裂、复制事件)
-- 📈 **随机映射** 用于进化事件估计
-- 🎨 **出版级的系统发育树可视化**
-- 🔧 **灵活的命令行界面**
-- 📋 **全面的统计报告**
+- **受ChromEvol启发的最大似然建模**
+- **祖先染色体状态重建**
+- **染色体重排量化** (融合、分裂、复制事件)
+- **随机映射** 用于进化事件估计
 
-## 🚀 快速开始 (Quick Start)
+## 快速开始 (Quick Start)
 
 ### 安装 (Installation)
 
@@ -71,8 +68,7 @@ chromevol-enhanced-analysis/
 │   └── *.svg, *.png, *.pdf             # 可视化图片
 ├── 📂 docs/                             # 文档
 │   ├── README.md                       # 技术文档 (ChromEvol增强功能)
-│   ├── user_guide.md                   # 用户指南
-│   └── api_reference.md                # API参考
+│   └── user_guide.md                   # 用户指南
 ├── 📂 examples/                         # 示例分析
 │   └── tutorial.md                     # 分步教程
 ├── 📄 README.md                        # 本文件 (项目总览)
@@ -92,12 +88,12 @@ chromevol-enhanced-analysis/
 
 ## 📖 文档 (Documentation)
 
-- 📚 **[用户指南](docs/user_guide.md)** - 详细的使用说明
-- 🔬 **[技术文档](docs/ChromEvol_Enhancement_README.md)** - 实现细节
-- 📊 **[科学报告示例](docs/evolutionary_analysis_report.md)** - 分析方法和结果示例
-- 🎓 **[教程](examples/tutorial.md)** - 分步操作示例 (中文)
+- **[用户指南](docs/user_guide.md)** - 详细的使用说明
+- **[技术文档](docs/ChromEvol_Enhancement_README.md)** - 实现细节
+- **[报告示例](docs/evolutionary_analysis_report.md)** - 分析方法和结果示例
+- **[教程](examples/tutorial.md)** - 分步操作示例 (中文)
 
-## 🎨 输出示例 (Example Output)
+## 输出示例 (Example Output)
 
 该流程可以生成出版质量的可视化结果，具有以下特点:
 - 分支颜色编码 (蓝色=融合, 红色=分裂, 绿色=稳定)
@@ -105,7 +101,7 @@ chromevol-enhanced-analysis/
 - 多种布局选项 (圆形/矩形)
 - 高分辨率输出格式 (SVG, PNG, PDF)
 
-## 📊 支持的分析类型 (Supported Analysis Types)
+## 支持的分析类型 (Supported Analysis Types)
 
 ### 1. 祖先状态重建
 - 最大似然估计
