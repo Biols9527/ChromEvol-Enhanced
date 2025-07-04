@@ -30,7 +30,7 @@ cd ChromEvol-Enhanced
 pip install -r requirements.txt
 ```
 
-### 用法 (Basic Usage) 详细见 [教程](examples/tutorial.md)
+### 用法 (Usage)  详细见 [教程](examples/tutorial.md)
 
 ```bash
 # 使用ChromEvol方法运行分析
