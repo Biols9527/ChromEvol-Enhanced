@@ -1,14 +1,11 @@
 import pandas as pd
 from ete3 import Tree
-# from ete3.treeview import TreeStyle, NodeStyle, TextFace # Moved into plot_annotated_tree
 import argparse
 import os
 import numpy as np
 import scipy.optimize as opt
 import scipy.linalg
 from scipy.special import logsumexp
-# from scipy.stats import poisson # Not used
-import itertools # Not used
 import warnings
 import logging
 
@@ -81,6 +78,13 @@ class ChromEvolutionModel:
         current_params = params if params is not None else self.params
         base_number = current_params.get('base_number')
 
+        # Validate parameters
+        for param_name, param_value in current_params.items():
+            if param_name != 'base_number' and param_name != 'linear_rate' and param_value is not None:
+                if param_value < 0:
+                    logging.warning(f"Negative rate parameter {param_name}={param_value}, setting to 0")
+                    current_params[param_name] = 0
+
         Q = np.zeros((self.max_chr + 1, self.max_chr + 1))
 
         for i in range(1, self.max_chr + 1): # Iterate from 1 to max_chr (chromosome number 0 is usually not modeled or has special meaning)
@@ -117,18 +121,29 @@ class ChromEvolutionModel:
                     Q[i, i - 2] += current_params['demidupl_loss'] / 2
             
             # Base number related events (e.g., polyploidy followed by chromosome loss leading to x+b or x-b)
-            if base_number is not None and base_number > 0:
+            if base_number is not None and base_number > 0 and base_number <= self.max_chr:
                 # Gain by base_number (i -> i + base_number)
                 if i + base_number <= self.max_chr:
-                    Q[i, i + base_number] += current_params.get('base_number_gain', 0)
+                    rate = current_params.get('base_number_gain', 0)
+                    if rate > 0:
+                        Q[i, i + base_number] += rate
 
                 # Loss by base_number (i -> i - base_number)
                 if i - base_number >= 1:
-                    Q[i, i - base_number] += current_params.get('base_number_loss', 0)
+                    rate = current_params.get('base_number_loss', 0)
+                    if rate > 0:
+                        Q[i, i - base_number] += rate
+            elif base_number is not None and base_number > self.max_chr:
+                logging.warning(f"Base number {base_number} exceeds max chromosome number {self.max_chr}")
 
         # Set diagonal elements: sum of outgoing rates
         for i in range(self.max_chr + 1):
             Q[i, i] = -np.sum(Q[i, :])
+
+        # Validate Q matrix
+        if np.any(np.isnan(Q)) or np.any(np.isinf(Q)):
+            logging.error("NaN or Inf values in Q matrix")
+            Q = np.nan_to_num(Q, nan=0.0, posinf=1e6, neginf=-1e6)
 
         self.Q_matrix = Q
         return Q
@@ -151,7 +166,18 @@ class ChromEvolutionModel:
             P = scipy.linalg.expm(Q * branch_length)
             # Ensure probabilities are non-negative and normalized
             P = np.maximum(P, 1e-12) # Increased precision for floor
-            P = P / P.sum(axis=1, keepdims=True)
+            
+            # Check for zero row sums before normalization
+            row_sums = P.sum(axis=1, keepdims=True)
+            zero_rows = row_sums <= 1e-12
+            if np.any(zero_rows):
+                logging.warning(f"Zero row sums found in transition probability matrix for branch length {branch_length}")
+                # For zero rows, set to uniform distribution as fallback
+                P[zero_rows.flatten(), :] = 1.0 / (self.max_chr + 1)
+                row_sums = P.sum(axis=1, keepdims=True)
+            
+            P = P / row_sums
+            
             # Check for NaNs which can arise from expm on ill-conditioned matrices
             if np.isnan(P).any():
                 logging.error(f"NaNs in transition probability matrix for branch length {branch_length}. Params: {current_params}")
@@ -176,6 +202,10 @@ class ChromEvolLikelihoodCalculator:
         self.model = model
         self.likelihoods = {} # Stores likelihood vectors for each node
         self.root_frequencies = None
+
+    def reset_likelihoods(self):
+        """Reset cached likelihoods for fresh calculation. Important for thread safety."""
+        self.likelihoods = {}
 
     def set_root_frequencies(self, frequencies):
         """Set root state frequencies (prior probabilities for root states)."""
@@ -204,11 +234,12 @@ class ChromEvolLikelihoodCalculator:
                 if 0 <= observed_count <= self.model.max_chr:
                     likelihood_vector[observed_count] = 1.0
                 else:
-                    logging.warning(f"Observed count {observed_count} for leaf {node.name} is outside model range [0, {self.model.max_chr}]. Treating as if count is {self.model.max_chr}.")
-                    likelihood_vector[self.model.max_chr] = 1.0 # Or treat as missing data
+                    logging.warning(f"Observed count {observed_count} for leaf {node.name} is outside model range [0, {self.model.max_chr}]. Treating as missing data.")
+                    # Treat out-of-range values as missing data for consistency
+                    likelihood_vector.fill(1.0)  # Uniform likelihood for all states
             else: # Missing data
                 logging.info(f"Missing chromosome count data for leaf {node.name}. Treating as equal probability for all states.")
-                likelihood_vector.fill(1.0 / (self.model.max_chr + 1)) # Or use specific handling for missing data
+                likelihood_vector.fill(1.0)  # Uniform likelihood for all states (normalized later)
             
             self.likelihoods[node_id] = likelihood_vector
             return likelihood_vector
@@ -235,15 +266,24 @@ class ChromEvolLikelihoodCalculator:
             # L_parent(s_parent) = sum_{s_child} [ P(s_child | s_parent, t) * L_child(s_child) ]
             # This is effectively (P_matrix @ child_likelihood_vector) for each state of the parent
             conditional_child_likelihood = np.dot(P_matrix, child_likelihood_vector)
+            
+            # Check for numerical issues
+            if np.any(np.isnan(conditional_child_likelihood)) or np.any(np.isinf(conditional_child_likelihood)):
+                logging.error(f"NaN or Inf values in conditional likelihood for child {child.name}")
+                conditional_child_likelihood = np.nan_to_num(conditional_child_likelihood, nan=1e-12, posinf=1e12, neginf=1e-12)
+            
             current_likelihood_contribution *= conditional_child_likelihood
 
             # Normalize to prevent underflow if values get too small
             norm_factor = np.sum(current_likelihood_contribution)
-            if norm_factor > 0 and norm_factor < 1e-100 : # Avoid division by zero or near-zero
-                 current_likelihood_contribution /= norm_factor
-                 # Need to track this scaling factor for the total likelihood if not using log-likelihoods directly.
-                 # For simplicity, this example doesn't explicitly track scaling factors for total logL here,
-                 # relying on logsumexp later or assuming Felsenstein's original formulation with logs.
+            if norm_factor > 0 and norm_factor < 1e-100: # Avoid division by zero or near-zero
+                current_likelihood_contribution /= norm_factor
+                # Need to track this scaling factor for the total likelihood if not using log-likelihoods directly.
+                # For simplicity, this example doesn't explicitly track scaling factors for total logL here,
+                # relying on logsumexp later or assuming Felsenstein's original formulation with logs.
+            elif norm_factor <= 0:
+                logging.warning(f"Zero or negative normalization factor {norm_factor} for node {id(node)}")
+                current_likelihood_contribution.fill(1e-12)  # Set to small positive values
 
         self.likelihoods[node_id] = current_likelihood_contribution
         return current_likelihood_contribution
@@ -253,23 +293,33 @@ class ChromEvolLikelihoodCalculator:
         Calculate total log-likelihood of the tree given the data and model.
         L = sum_s [ Prior(root_state=s) * L_root(s) ]
         """
-        root = self.tree.get_tree_root()
-        root_likelihood_vector = self.calculate_likelihood_at_node(root)
+        try:
+            root = self.tree.get_tree_root()
+            root_likelihood_vector = self.calculate_likelihood_at_node(root)
 
-        if self.root_frequencies is None: # Ensure root frequencies are set
-            self.set_root_frequencies(None) # Sets to uniform if not already set
+            if self.root_frequencies is None: # Ensure root frequencies are set
+                self.set_root_frequencies(None) # Sets to uniform if not already set
 
-        # Weighted sum of likelihoods by root state prior probabilities
-        # Using logsumexp for numerical stability if root_likelihood_vector contains raw probabilities
-        # log_L = logsumexp(np.log(root_likelihood_vector) + np.log(self.root_frequencies))
-        # If root_likelihood_vector is already scaled or small, direct sum might be problematic.
-        # Assuming calculate_likelihood_at_node returns L_i(s) values that can be directly multiplied.
-        
-        total_likelihood = np.sum(root_likelihood_vector * self.root_frequencies)
+            # Check for numerical issues
+            if np.any(np.isnan(root_likelihood_vector)) or np.any(np.isinf(root_likelihood_vector)):
+                logging.error("NaN or Inf values in root likelihood vector")
+                return -np.inf
 
-        if total_likelihood <= 0: # Avoid log(0) or log(negative)
+            # Weighted sum of likelihoods by root state prior probabilities
+            # Using logsumexp for numerical stability if root_likelihood_vector contains raw probabilities
+            # log_L = logsumexp(np.log(root_likelihood_vector) + np.log(self.root_frequencies))
+            # If root_likelihood_vector is already scaled or small, direct sum might be problematic.
+            # Assuming calculate_likelihood_at_node returns L_i(s) values that can be directly multiplied.
+            
+            total_likelihood = np.sum(root_likelihood_vector * self.root_frequencies)
+
+            if total_likelihood <= 0: # Avoid log(0) or log(negative)
+                logging.warning(f"Non-positive total likelihood: {total_likelihood}")
+                return -np.inf
+            return np.log(total_likelihood)
+        except Exception as e:
+            logging.error(f"Error calculating total log-likelihood: {e}")
             return -np.inf
-        return np.log(total_likelihood)
 
     def ancestral_state_reconstruction(self):
         """
@@ -356,13 +406,14 @@ class ChromEvolOptimizer:
             self.model.set_parameters(**update_dict)
 
             # Reset likelihoods in calculator for new parameter set
-            self.calculator.likelihoods = {}
+            self.calculator.reset_likelihoods()
             log_likelihood = self.calculator.calculate_total_log_likelihood()
 
             # Restore original params if needed, or ensure model is updated only if optimization is successful
             # self.model.set_parameters(**current_model_params) # No, optimizer updates the model
             
             if np.isinf(log_likelihood) or np.isnan(log_likelihood):
+                logging.warning(f"Invalid log-likelihood: {log_likelihood} with params {params_vector}")
                 return 1e9 # Large penalty for invalid likelihood
 
             return -log_likelihood  # Return negative for minimization
@@ -507,6 +558,11 @@ class StochasticMapper:
                  break
 
             probabilities = possible_next_states_rates / np.sum(possible_next_states_rates)
+            
+            # Check for numerical issues
+            if np.any(np.isnan(probabilities)) or np.any(np.isinf(probabilities)):
+                logging.error(f"NaN or Inf probabilities in state transition for state {current_state}")
+                break
             next_state = np.random.choice(np.arange(self.model.max_chr + 1), p=probabilities)
 
             event_type = self._classify_event(current_state, next_state, params)
@@ -696,7 +752,7 @@ def perform_chromevol_analysis(tree, counts_dict, max_chr_num, root_prior_state=
         
         # Calculate final likelihood with current (possibly optimized) parameters
         # Need to reset likelihoods if parameters changed and calculator was not part of optimizer's direct update loop
-        calculator.likelihoods = {} # Reset before final calculation
+        calculator.reset_likelihoods() # Reset before final calculation
         final_log_likelihood = calculator.calculate_total_log_likelihood()
         logging.info(f"Final log-likelihood with current parameters: {final_log_likelihood:.4f}")
 
