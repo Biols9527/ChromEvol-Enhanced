@@ -1,0 +1,16 @@
+branch_to_node,parent_node,event_type,change_magnitude,count_from,count_to
+Schizocardium_californicum,Ambulacraria,fission,12,11,23
+Eleutherozoa,Echinodermata,fission,12,11,23
+Pecten_maximus,Deuterostomia,fission,9,10,19
+Branchiostoma_floridae,Deuterostomia,fission,9,10,19
+Ophiuroidea1,Ophiuroidea2,fission,2,23,25
+Ambulacraria,Deuterostomia,fission,1,10,11
+Arbacia_lixula,Euechinoidea,fission,1,21,22
+Sphaerechinus_granularis,Toxopneustidae,fission,1,19,20
+Amphiura_filiformis,Ophiurida,fusion,5,25,20
+Ophiura_sarsii,Ophiuroidea2,fusion,4,23,19
+Astrospartus_mediterraneus,Ophiuroidea1,fusion,2,25,23
+Toxopneustidae,Camarodonta1,fusion,2,21,19
+Asteroidea,Asterozoa,fusion,1,23,22
+Echinoidea,Echinozoa,fusion,1,23,22
+Euechinoidea,Echinoidea,fusion,1,22,21

@@ -296,7 +296,8 @@ class ChromEvolLikelihoodCalculator:
         
         # Traverse tree (postorder for up-pass is done, pre-order or any order for assigning based on stored likelihoods)
         for node in self.tree.traverse("preorder"): # or "levelorder"
-            if node_id := id(node) in self.likelihoods:
+            node_id = id(node)
+            if node_id in self.likelihoods:
                 node_likelihood_vector = self.likelihoods[node_id]
 
                 # Normalize to get probabilities if they are not already (depends on scaling in up-pass)
