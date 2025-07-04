@@ -26,8 +26,8 @@ This project provides a comprehensive toolkit for analyzing chromosome evolution
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/chromevol-enhanced-analysis.git
-cd chromevol-enhanced-analysis
+git clone https://github.com/Biols9527/ChromEvol-Enhanced.git
+cd ChromEvol-Enhanced
 
 # Install dependencies
 pip install -r requirements.txt
