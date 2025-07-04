@@ -71,8 +71,8 @@ chromevol-enhanced-analysis/
 │   └── *.svg, *.png, *.pdf             # 可视化图片
 ├── 📂 docs/                             # 文档
 │   ├── README.md                       # 技术文档 (ChromEvol增强功能)
-│   ├── user_guide.md                   # 用户指南 (待补充)
-│   └── api_reference.md                # API参考 (待补充)
+│   ├── user_guide.md                   # 用户指南
+│   └── api_reference.md                # API参考
 ├── 📂 examples/                         # 示例分析
 │   └── tutorial.md                     # 分步教程
 ├── 📄 README.md                        # 本文件 (项目总览)
@@ -92,9 +92,9 @@ chromevol-enhanced-analysis/
 
 ## 📖 文档 (Documentation)
 
-- 📚 **[用户指南](docs/user_guide.md)** - 详细的使用说明 (待补充)
-- 🔬 **[技术文档](docs/ChromEvol_Enhancement_README.md)** - 实现细节 (部分内容待翻译)
-- 📊 **[科学报告示例](docs/evolutionary_analysis_report.md)** - 分析方法和结果示例 (待补充)
+- 📚 **[用户指南](docs/user_guide.md)** - 详细的使用说明
+- 🔬 **[技术文档](docs/ChromEvol_Enhancement_README.md)** - 实现细节
+- 📊 **[科学报告示例](docs/evolutionary_analysis_report.md)** - 分析方法和结果示例
 - 🎓 **[教程](examples/tutorial.md)** - 分步操作示例 (中文)
 
 ## 🎨 输出示例 (Example Output)
