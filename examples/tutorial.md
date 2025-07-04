@@ -23,16 +23,15 @@
 ### 1.1 克隆仓库并安装依赖 (Clone Repository and Install Dependencies)
 如果您尚未完成，请先克隆本项目的Git仓库，并安装所需的Python依赖包。
 ```bash
-# 克隆仓库 (如果尚未操作)
+# 克隆仓库
 # git clone https://github.com/Biols9527/ChromEvol-Enhanced.git
 # cd ChromEvol-Enhanced
 
-# 建议在Python虚拟环境中安装依赖
-# python -m venv venv_chromeEvol
-# source venv_chromeEvol/bin/activate  # Linux/macOS
-# venv_chromeEvol\Scripts\activate  # Windows
-
+# 使用conda (推荐)
+conda env create -n ChromEvol python==3.11 libgl
+conda activate ChromEvol
 pip install -r requirements.txt
+
 ```
 
 ### 1.2 检查工作目录和数据 (Verify Working Directory and Data)
