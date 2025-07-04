@@ -266,23 +266,3 @@ python src/ancestral_reconstruction.py --use_chromevol  # 不使用 --optimize_p
 1. **记录参数**: 保存完整的命令行参数
 2. **统计检验**: 报告置信度和显著性
 3. **生物学解释**: 结合生物学背景解释结果
-
-## 📞 获取帮助
-
-### 在线资源
-- **项目文档**: [GitHub Wiki](https://github.com/your-username/chromevol-enhanced-analysis/wiki)
-- **问题报告**: [GitHub Issues](https://github.com/your-username/chromevol-enhanced-analysis/issues)
-- **讨论社区**: [GitHub Discussions](https://github.com/your-username/chromevol-enhanced-analysis/discussions)
-
-### 联系方式
-- **邮箱**: your.email@institution.edu
-- **技术支持**: 通过GitHub Issues提交
-
-### 学习资源
-- **ChromEvol原理**: [ChromEvol论文](https://doi.org/10.1093/molbev/msq148)
-- **系统发育学基础**: [Tree Thinking教程](https://www.nature.com/scitable/topicpage/reading-a-phylogenetic-tree-the-meaning-of-41956/)
-- **Python生物信息学**: [Biopython教程](https://biopython.org/DIST/docs/tutorial/Tutorial.html)
-
----
-
-🎉 **现在您已经掌握了使用本分析流水线的全部技能！开始您的染色体进化研究之旅吧！**
