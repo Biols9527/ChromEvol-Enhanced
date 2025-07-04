@@ -30,10 +30,10 @@ cd ChromEvol-Enhanced
 pip install -r requirements.txt
 ```
 
-### 基本用法 (Basic Usage)
+### 用法 (Basic Usage)
 
 ```bash
-# 使用ChromEvol方法运行完整分析
+# 使用ChromEvol方法运行分析
 python src/ancestral_reconstruction.py \
     --tree data/pruned_phylogeny.nwk \
     --counts data/chromosome_counts.csv \
